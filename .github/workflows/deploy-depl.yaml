@@ -1,16 +1,16 @@
 name: CI/CD Pipeline
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
   pull_request:
     branches:
       - main
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     env:
       IMAGE_REGISTRY: docker.io
@@ -40,18 +40,18 @@ jobs:
         docker push $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest
 
   # Set up Minikube
-    - name: Set up Minikube
-      uses: manusa/actions-minikube@v2
-      with:
-        minikube-version: 'v1.24.0'
+    # - name: Set up Minikube
+    #   uses: manusa/actions-minikube@v2
+    #   with:
+    #     minikube-version: 'v1.24.0'
 
     - name: Start Minikube
       run: |
         minikube start --driver=docker
 
     # Set up kubectl and apply Kubernetes files
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v1
+    # - name: Set up kubectl
+    #   uses: azure/setup-kubectl@v1
 
     - name: Apply Kubernetes files
       run: |
