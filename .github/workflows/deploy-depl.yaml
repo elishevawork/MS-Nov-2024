@@ -1,109 +1,52 @@
-name: CI
+name: CI/CD Pipeline
 on:
-  - push
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 jobs:
-  job1:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    name: job1
+    name: build-and-deploy
+    env:
+      IMAGE_REGISTRY: docker.io
+      IMAGE_REPOSITORY: elishevafefer
     steps:
       - name: start minikube
         id: minikube
         uses: medyagh/setup-minikube@latest
+        with:
+          driver: docker
+          addons: ingress
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Bitcoin Service Image
+        run: |
+          docker build -t $IMAGE_REGISTRY/$IMAGE_REPOSITORY/bitcoinservice:latest ./BitcoinService
+          docker push $IMAGE_REGISTRY/$IMAGE_REPOSITORY/bitcoinservice:latest
+
+      - name: Build and Push Worker Service Image
+        run: |
+          docker build -t $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest ./SomeWorkerService
+          docker push $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest
+
+      - name: Apply Kubernetes files
+        run: |
+          kubectl apply -f K8S/ # Apply your Kubernetes deployment files
+
       # now you can run kubectl to see the pods in the cluster
       - name: kubectl
-        run: kubectl get pods -A
-
-# #
-# name: CI/CD Pipeline
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
-# jobs:
-#   build-and-deploy:
-#     runs-on: ubuntu-latest
-#     name: build-and-deploy
-#     env:
-#       IMAGE_REGISTRY: docker.io
-#       IMAGE_REPOSITORY: elishevafefer
-#     steps:
-#       - name: start minikube
-#         uses: medyagh/setup-minikube@latest
-#         id: minikube
-#         with:
-#           cache: false
-#           minikube-version: 1.24.0
-#           driver: docker
-#           addons: ingress
-#           wait: false
-#      # Checkout the code
-#     - name: Checkout Code
-#       uses: actions/checkout@v4
-
-#     # Log in to Docker Hub
-#     - name: Log in to Docker Hub
-#       uses: docker/login-action@v2
-#       with:
-#         username: ${{ secrets.DOCKER_USERNAME }}
-#         password: ${{ secrets.DOCKER_PASSWORD }}
-
-
-
-
-#     steps:
-#       - name: start minikube
-#         uses: medyagh/setup-minikube@latest
-#         id: minikube
-#         with:
-#           cache: false
-#           minikube-version: 1.24.0
-#           driver: docker
-#           addons: ingress
-#           wait: false
-#       # now you can run kubectl to see the pods in the cluster
-#       - name: kubectl
-#         run: kubectl get pods -A
-#     # Checkout the code
-#     - name: Checkout Code
-#       uses: actions/checkout@v4
-
-#     # Log in to Docker Hub
-#     - name: Log in to Docker Hub
-#       uses: docker/login-action@v2
-#       with:
-#         username: ${{ secrets.DOCKER_USERNAME }}
-#         password: ${{ secrets.DOCKER_PASSWORD }}
-
-#     # Build and Push Docker Images for each service
-#     - name: Build and Push Bitcoin Service Image
-#       run: |
-#         docker build -t $IMAGE_REGISTRY/$IMAGE_REPOSITORY/bitcoinservice:latest ./BitcoinService
-#         docker push $IMAGE_REGISTRY/$IMAGE_REPOSITORY/bitcoinservice:latest
-
-#     - name: Build and Push Worker Service Image
-#       run: |
-#         docker build -t $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest ./SomeWorkerService
-#         docker push $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest
-
-#   # Set up Minikube
-#     - name: start minikube
-#         id: minikube
-#         uses: medyagh/setup-minikube@latest
-
-#     - name: kubectl
-#         run: kubectl get pods -A
-
-#     - name: Apply Kubernetes files
-#       run: |
-#         kubectl apply -f K8S/ # Apply your Kubernetes deployment files
-
-#     # # Verify the application is running
-#     # - name: Check if the services are running
-#     #   run: |
-#     #     kubectl get pods
-#     #     kubectl get services
+        run: |
+          kubectl get pods
+          kubectl get services
 
