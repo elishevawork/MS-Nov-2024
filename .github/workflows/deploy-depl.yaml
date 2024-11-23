@@ -32,12 +32,12 @@ jobs:
 
       - name: Build and Push Bitcoin Service Image
         run: |
-          docker build -t $IMAGE_REGISTRY/$IMAGE_REPOSITORY/bitcoinservice:latest ./BitcoinService
+          docker build -t $IMAGE_REGISTRY/$IMAGE_REPOSITORY/bitcoinservice:latest ./BitcoinService/BitcoinService/BitcoinService
           docker push $IMAGE_REGISTRY/$IMAGE_REPOSITORY/bitcoinservice:latest
 
       - name: Build and Push Worker Service Image
         run: |
-          docker build -t $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest ./SomeWorkerService
+          docker build -t $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest ./SomeWorkerService/SomeWorkerService
           docker push $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest
 
       - name: Apply Kubernetes files
