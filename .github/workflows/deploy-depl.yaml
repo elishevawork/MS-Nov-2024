@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     env:
       IMAGE_REGISTRY: docker.io
@@ -40,12 +40,11 @@ jobs:
         docker push $IMAGE_REGISTRY/$IMAGE_REPOSITORY/someworkerservice:latest
 
   # Set up Minikube
-    # - name: Set up Minikube
-    #   uses: manusa/actions-minikube@v2
-    #   with:
-    #     minikube-version: 'v1.24.0'
+    - name: start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@latest
 
-    - name: Start Minikube
+    - name: Start Minikube cluster
       run: |
         minikube start --driver=docker
 
