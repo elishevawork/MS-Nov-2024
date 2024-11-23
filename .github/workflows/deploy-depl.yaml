@@ -44,13 +44,8 @@ jobs:
         id: minikube
         uses: medyagh/setup-minikube@latest
 
-    - name: Start Minikube cluster
-      run: |
-        minikube start --driver=docker
-
-    # Set up kubectl and apply Kubernetes files
-    # - name: Set up kubectl
-    #   uses: azure/setup-kubectl@v1
+    - name: kubectl
+        run: kubectl get pods -A
 
     - name: Apply Kubernetes files
       run: |
