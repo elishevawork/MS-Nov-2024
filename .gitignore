@@ -1,0 +1,50 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+*.ncrunch*
+*.cache
+*.ide/
+.idea/
+
+# Build Results
+bin/
+obj/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# Publishing
+.publish/
+out/
+
+# Package Management
+*.nuget
+*.nupkg
+packages/
+*.csproj.user
+
+# OS Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+*.tlog
+*.trace
+*.log1
+*.log2
+
+# Coverage and Reports
+TestResults/
+*.coverage
+*.coveragexml
+*.coverage.opencover.xml

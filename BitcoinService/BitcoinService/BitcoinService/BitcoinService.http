@@ -1,0 +1,6 @@
+@BitcoinService_HostAddress = http://localhost:5174
+
+GET {{BitcoinService_HostAddress}}/bitcoin/
+Accept: application/json
+
+###

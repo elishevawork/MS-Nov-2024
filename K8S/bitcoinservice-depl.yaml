@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitcoinservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bitcoinservice
+  template:
+    metadata:
+      labels:
+        app: bitcoinservice
+    spec:
+      containers:
+      - name: bitcoinservice
+        image: elishevafefer/bitcoinservice:latest
+        ports:
+        - containerPort: 5001
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 5001
+          initialDelaySeconds: 20 
+          periodSeconds: 10     
+          timeoutSeconds: 2       
+        readinessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 5001
+          initialDelaySeconds: 20
+          periodSeconds: 10       
+          timeoutSeconds: 2  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bitcoinservice
+spec:
+  selector:
+    app: bitcoinservice
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5001
+  type: ClusterIP
