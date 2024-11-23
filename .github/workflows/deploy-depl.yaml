@@ -17,6 +17,19 @@ jobs:
       IMAGE_REPOSITORY: elishevafefer
 
     steps:
+      - name: start minikube
+        uses: medyagh/setup-minikube@latest
+        id: minikube
+        with:
+          cache: false
+          minikube-version: 1.24.0
+          driver: docker
+          addons: ingress
+          wait: false
+      # now you can run kubectl to see the pods in the cluster
+      - name: kubectl
+        run: kubectl get pods -A
+        
     # Checkout the code
     - name: Checkout Code
       uses: actions/checkout@v4
