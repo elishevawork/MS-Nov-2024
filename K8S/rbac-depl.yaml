@@ -1,0 +1,34 @@
+# Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: minikube-sa
+  namespace: default
+
+---
+# Role with limited permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: minikube-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+
+---
+# Bind the Role to the Service Account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: minikube-rolebinding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: minikube-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: minikube-role
+  apiGroup: rbac.authorization.k8s.io
