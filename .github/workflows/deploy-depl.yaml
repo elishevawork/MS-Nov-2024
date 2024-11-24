@@ -42,9 +42,9 @@ jobs:
 
       - name: Apply Kubernetes files
         run: |
-          kubectl apply -f K8S/ # Apply your Kubernetes deployment files
+          kubectl apply -f K8S/ 
 
-      # now you can run kubectl to see the pods in the cluster
+      # run kubectl to see the pods in the cluster
       - name: kubectl
         run: |
           kubectl get pods
